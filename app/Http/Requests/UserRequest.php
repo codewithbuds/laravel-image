@@ -3,6 +3,8 @@
 namespace App\Http\Requests;
 
 use Illuminate\Foundation\Http\FormRequest;
+use Illuminate\Http\Exceptions\HttpResponseException;
+use Illuminate\Contracts\Validation\Validator;
 
 class UserRequest extends FormRequest
 {
@@ -32,13 +34,13 @@ class UserRequest extends FormRequest
         };
     }
         //validation for postRegistration
-       public function Registration(): array 
+    public function Registration(): array 
         {
             return [
-                'fname' =>' required|max:255',
-                'lname' =>' required|max:255',
+                'name' =>' required|max:255',
                 'email' =>' required|email|unique:users',
                 'password' => 'required|min:8',
+                'profileimage' => 'required'
             ];
         }
         
@@ -68,10 +70,19 @@ class UserRequest extends FormRequest
      public function messages()
      {
          return [
-             'fname.required' => 'Please Enter your First Name',
-             'lname.required' => "Please Enter your Last name",
+             'name.required' => 'Please Enter your Name',
+             'profileimage.required' => "Please select profile image",
              'email.required' => 'Please Enter your Email',
              'password.required' => 'Enter Your Password',
          ];
+     }
+
+
+     protected function failedValidation(Validator $validator)
+     {
+         throw new HttpResponseException(response()->json([
+             'errors' => $validator->errors(),
+             'status' => false
+           ], 422));
      }
 }

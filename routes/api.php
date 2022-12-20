@@ -20,7 +20,7 @@ use Illuminate\Foundation\EmailVerificationRequest;
 
 
 Route::post('/user-login', [UserController::class, 'Login'])->name('login.post'); 
-Route::post('/user-registration', [UserController::class, 'Registration'])->name('register.post'); 
+Route::post('/user-registration',[UserController::class, 'Registration'])->name('register.post'); 
 Route::get('/account/verify/{token}', [UserController::class, 'verifyAccount'])->name('user.verify'); 
 Route::get('/profile', [UserController::class,'profile'])->name('profile');
   

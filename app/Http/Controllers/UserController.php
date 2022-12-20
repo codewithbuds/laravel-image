@@ -4,11 +4,11 @@ namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
 use App\Http\Requests\UserRequest;
-use App\Http\Controllers;
+use App\Http\Controllers\Controller;
 use Illuminate\Support\Facades\Auth;
-use App\Models\Users;
+use App\Models\User;
 use App\Models\UserVerify;
-use Session;
+use DB;
 use Hash;
 use Mail;
 use Illuminate\Support\Str;
@@ -35,7 +35,7 @@ class UserController extends Controller
  
          $user = $request->all();
          
-         $createUser = $this->create($user);
+        return $createUser = $this->create($user);
  
          $token = Str::random(255);
  
@@ -43,25 +43,32 @@ class UserController extends Controller
              'user_id' => $createUser->id,
              'token' => $token,
          ]);
+
+        //  DB::table('users')->insert([
+        //     'name' => $request->name,
+        //     'email' => $request->email,
+        //     'profileimage' => $request->profileimage,
+        //     'password' => $request->password,
+        // ]);
      }
+
          // create table of user
      public function create(array $user)
      {
-         return User::create([
-            'id'=>$user['id'],
-             'name' => $user['fname'],
+         $user= User::create([
+             'name' => $user['name'],
              'email' => $user['email'],
              'profileimage' => $user['profileimage'],
              'password' => Hash::make($user['password']),
          ]);
 
-         
+        
  
         //  Image_Upload
-         if ($request->profileimage) {
-             $imageName = time() . '.' . $request->profileimage->extension();
-             $request->profileimage->move(public_path('images'), $imageName);
-         }
+        //  if ($request->profileimage) {
+        //      $imageName = time() . '.' . $request->profileimage->extension();
+        //      $request->profileimage->move(public_path('images'), $imageName);
+        //  }
  
          // Here I can send mail through Queues or like this 
          Mail::send(
