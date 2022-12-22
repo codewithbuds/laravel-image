@@ -3,7 +3,9 @@
 namespace App\Http\Controllers;
 use App\Http\Controllers\Controller;
 use Illuminate\Http\Request;
-use App\Http\Requests\UserRequest;
+use App\Http\Requests\ForgotRequest;
+use App\Http\Requests\ResetRequest;
+// use App\Http\Requests\UserRequest;
 use App\Models\User;
 use Mail;
 use Hash;
@@ -14,7 +16,7 @@ use Illuminate\Support\Str;
 class PasswordController extends Controller
 {
     //Forgot the password
-    public function ForgetPassword(UserRequest $request)
+    public function ForgetPassword(ForgotRequest $request)
     {
         $request->validated();
 
@@ -25,7 +27,7 @@ class PasswordController extends Controller
             'token' => $token,
             'created_at' => Carbon::now(),
         ]);
-         // Here I can send mail through Queues or like this 
+        // Here I can send mail through Queues or like this
         Mail::send('email.forgetPassword', ['token' => $token], function (
             $message
         ) use ($request) {
@@ -39,7 +41,7 @@ class PasswordController extends Controller
         );
     }
     //For Reset password
-    public function ResetPassword(UserRequest $request)
+    public function ResetPassword(ResetRequest $request)
     {
         $request->validated();
 
@@ -64,9 +66,6 @@ class PasswordController extends Controller
             ->where(['email' => $request->email])
             ->delete();
 
-        return with(
-            'message',
-            'Your password has been changed!'
-        );
+        return with('message', 'Your password has been changed!');
     }
 }

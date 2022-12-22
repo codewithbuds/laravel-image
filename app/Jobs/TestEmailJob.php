@@ -2,27 +2,28 @@
 
 namespace App\Jobs;
 
+use App\Mail\VerfiUserEmail;
 use Illuminate\Bus\Queueable;
 use Illuminate\Contracts\Queue\ShouldBeUnique;
 use Illuminate\Contracts\Queue\ShouldQueue;
 use Illuminate\Foundation\Bus\Dispatchable;
 use Illuminate\Queue\InteractsWithQueue;
 use Illuminate\Queue\SerializesModels;
+use Illuminate\Support\Facades\Mail;
 
 class TestEmailJob implements ShouldQueue
 {
     use Dispatchable, InteractsWithQueue, Queueable, SerializesModels;
-
-    protected $details;
-
+    protected $data;
     /**
      * Create a new job instance.
      *
      * @return void
      */
-    public function __construct($details)
+    public function __construct($data)
     {
-        $this->details = $details;
+        
+        $this->data=$data;
     }
 
     /**
@@ -32,14 +33,6 @@ class TestEmailJob implements ShouldQueue
      */
     public function handle()
     {
-        $email = new TestMail();
-        Mail::send(
-            'email.emailVerificationEmail',
-            ['token' => $token],
-            function ($message) use ($request) {
-                $message->to($request->email);
-                $message->subject('Email Verification Mail');
-            }
-        );
+        Mail::to($this->data['email'])->send(new VerfiUserEmail($this->data['tokenlink'],$this->data['subject'])); 
     }
 }

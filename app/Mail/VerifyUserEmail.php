@@ -9,30 +9,24 @@ use Illuminate\Mail\Mailables\Content;
 use Illuminate\Mail\Mailables\Envelope;
 use Illuminate\Queue\SerializesModels;
 
-class TestMail extends Mailable
+class VerfiUserEmail extends Mailable 
 {
     use Queueable, SerializesModels;
+
+    protected $token;
+    public $subject;
 
     /**
      * Create a new message instance.
      *
      * @return void
      */
-    public function __construct()
+    public function __construct($token, $subject)
     {
-        //
+        $this->token=$token;
+        $this->subject=$subject;
     }
 
-    /**
-    * Build the message.
-    *
-    * @return $this
-    */
-   public function build()
-   {
-       return $this->view('emails.testMail');
-   }
-   
     /**
      * Get the message envelope.
      *
@@ -41,7 +35,7 @@ class TestMail extends Mailable
     public function envelope()
     {
         return new Envelope(
-            subject: 'Test Mail',
+            subject: $this->subject,
         );
     }
 
@@ -53,7 +47,10 @@ class TestMail extends Mailable
     public function content()
     {
         return new Content(
-            view: 'view.name',
+            view: 'email',
+            with: [
+                'link'=>$this->token,
+            ],
         );
     }
 
