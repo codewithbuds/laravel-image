@@ -48,7 +48,7 @@ class ImageController extends Controller
     public function viewImage()
     {
         $images = Image::where('status', 'public')->get();
-        if ($iamge) {
+        if ($images) {
             $images = Image::orderBy('id', 'DESC')->get();
             return response()->json(['message' => 'Images Found', $images]);
         } else {
