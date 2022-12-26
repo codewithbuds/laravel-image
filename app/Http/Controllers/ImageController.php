@@ -13,7 +13,7 @@ use Illuminate\Support\Facades\File;
 class ImageController extends Controller
 {
     //upload image
-    public function uploadImage(Request $request)
+    public function uploadImage(UploadRequest $request)
     {
         $user = UserVerify::where('token')->first()->user;
         $file = $request->file('image');
